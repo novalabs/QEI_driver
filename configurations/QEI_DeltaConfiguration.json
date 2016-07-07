@@ -14,6 +14,12 @@
       "description": "Number of ticks per revolution",
       "type": "FLOAT32",
       "size": 1
+    },
+    {
+      "name": "invert",
+      "description": "Invert rotation direction",
+      "type": "UINT8",
+      "size": 1
     }
   ]
 }
