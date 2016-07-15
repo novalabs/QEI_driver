@@ -1,8 +1,5 @@
 {
   "name": "QEI_driver",
-  "namespace": "sensors",
   "description": "QEI sensor driver",
-  "sources": [
-    "QEI.cpp"
-  ]
+  "provider": "core"
 }

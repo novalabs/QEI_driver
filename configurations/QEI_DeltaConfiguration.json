@@ -1,7 +1,7 @@
 {
   "name": "QEI_DeltaConfiguration",
   "description": "QEI_Delta",
-  "namespace": "sensors",
+  "namespace": "@",
   "fields": [
     {
       "name": "period",

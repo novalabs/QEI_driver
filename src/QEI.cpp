@@ -4,86 +4,95 @@
  * subject to the License Agreement located in the file LICENSE.
  */
 
-#include <QEI_driver/QEI.hpp>
+#include <core/QEI_driver/QEI.hpp>
 #include <Module.hpp>
 
-#include <Core/Utils/Math/Constants.hpp>
+#include <core/utils/math/Constants.hpp>
 
-namespace sensors {
-   QEI::QEI(
-      Core::HW::QEI& qei
-   ) : _qei(qei) {}
+namespace core {
+namespace QEI_driver {
+QEI::QEI(
+   core::hw::QEI& qei
+) : _qei(qei) {}
 
-   QEI::~QEI()
-   {}
+QEI::~QEI()
+{}
 
-   bool
-   QEI::probe()
-   {
-      return true;
-   } // QEI::init
+bool
+QEI::probe()
+{
+   return true;
+}       // QEI::init
 
-   QEI_Delta::QEI_Delta(
-      QEI& device
-   ) : _timestamp(Core::MW::Time::IMMEDIATE), _device(device)
-   {
-      configuration.period = 20.0f;
-      configuration.ticks  = 0.0f;
-   }
+QEI_Delta::QEI_Delta(
+   const char* name,
+   QEI&        device
+) : CoreConfigurable<QEI_DeltaConfiguration>::CoreConfigurable(name),
+   _timestamp(core::os::Time::IMMEDIATE),
+   _device(device)
+{}
 
-   QEI_Delta::~QEI_Delta()
-   {}
+QEI_Delta::~QEI_Delta()
+{}
 
-   bool
-   QEI_Delta::init()
-   {
-      CORE_ASSERT(configuration.ticks != 0);
-      return true;
-   } // QEI::init
+bool
+QEI_Delta::init()
+{
+   return true;
+}       // QEI::init
 
-   bool
-   QEI_Delta::start()
-   {
-      _device._qei.enable();
-      _timestamp = Core::MW::Time::IMMEDIATE;
-      return true;
-   }
+bool
+QEI_Delta::configure()
+{
+   return true;
+}
 
-   bool
-   QEI_Delta::stop()
-   {
-      _device._qei.disable();
-      return true;
-   }
+bool
+QEI_Delta::start()
+{
+   CORE_ASSERT(isConfigured());
 
-   bool
-   QEI_Delta::update()
-   {
-      return true;
-   } // QEI_Delta::update
+   _device._qei.enable();
+   _timestamp = core::os::Time::IMMEDIATE;
+   return true;
+}
 
-   void
-   QEI_Delta::get(
-      DataType& data
-   )
-   {
-      data.value = _device._qei.getDelta() / (float)configuration.ticks * (2.0f * Core::Utils::Math::Constants::pi<float>());
-   } // QEI::update
+bool
+QEI_Delta::stop()
+{
+   _device._qei.disable();
+   return true;
+}
 
-   bool
-   QEI_Delta::waitUntilReady()
-   {
-      // FIXME !!!!!
-      /*
-         if (_timestamp != Core::MW::Time::IMMEDIATE) {
-         Core::MW::Thread::sleep_until(_timestamp + Core::MW::Time::ms(configuration.period));
-         }
+bool
+QEI_Delta::update()
+{
+   return true;
+}       // QEI_Delta::update
 
-         _timestamp = Core::MW::Time::now();
-       */
+void
+QEI_Delta::get(
+   DataType& data
+)
+{
+   data.value = _device._qei.getDelta() / (float)configuration().ticks * (2.0f * core::utils::math::constants::pi<float>());
+}       // QEI::update
 
-      chThdSleepMilliseconds((uint16_t)configuration.period);
+bool
+QEI_Delta::waitUntilReady()
+{
+   // FIXME !!!!!
+   /*
+      if (_timestamp != core::os::Time::IMMEDIATE) {
+      core::os::Thread::sleep_until(_timestamp + core::os::Time::ms(configuration.period));
+      }
 
-      return true;
-   }
+      _timestamp = core::os::Time::now();
+    */
+
+   chThdSleepMilliseconds((uint16_t)configuration().period);
+
+   return true;
+}
+}
 }

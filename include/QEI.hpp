@@ -6,73 +6,77 @@
 
 #pragma once
 
-#include <Configuration.hpp>
+#include <ModuleConfiguration.hpp>
 
-#include <Core/HW/QEI.hpp>
-#include <Core/MW/CoreSensor.hpp>
-#include <QEI_driver/QEI_DeltaConfiguration.hpp>
+#include <core/hw/QEI.hpp>
+#include <core/mw/CoreSensor.hpp>
+#include <core/QEI_driver/QEI_DeltaConfiguration.hpp>
 
-namespace sensors {
-   class QEI
-   {
+namespace core {
+namespace QEI_driver {
+class QEI
+{
 public:
-      QEI(
-         Core::HW::QEI& qei
-      );
+   QEI(
+      core::hw::QEI& qei
+   );
 
-      virtual
-      ~QEI();
-
-public:
-      bool
-      probe();
-
+   virtual
+   ~QEI();
 
 public:
-      Core::HW::QEI& _qei;
-   };
+   bool
+   probe();
 
-   class QEI_Delta:
-      public Core::MW::CoreSensor<Configuration::QEI_DELTA_DATATYPE>
-   {
-public:
-      QEI_Delta(
-         QEI& device
-      );
-
-      virtual
-      ~QEI_Delta();
 
 public:
-      QEI_DeltaConfiguration configuration;
+   core::hw::QEI& _qei;
+};
+
+class QEI_Delta:
+   public core::mw::CoreSensor<ModuleConfiguration::QEI_DELTA_DATATYPE>,
+   public core::mw::CoreConfigurable<core::QEI_driver::QEI_DeltaConfiguration>
+{
+public:
+   QEI_Delta(
+      const char* name,
+      QEI&        device
+   );
+
+   virtual
+   ~QEI_Delta();
 
 private:
 public:
-      bool
-      init();
+   bool
+   init();
 
-      bool
-      start();
+   bool
+   configure();
 
-      bool
-      stop();
+   bool
+   start();
 
-      bool
-      waitUntilReady();
+   bool
+   stop();
 
-      bool
-      update();
+   bool
+   waitUntilReady();
 
-      void
-      get(
-         DataType& data
-      );
+   bool
+   update();
+
+   void
+   get(
+      DataType& data
+   );
 
 
 protected:
-      Core::MW::Time _timestamp;
+   core::os::Time _timestamp;
 
 private:
-      QEI& _device;
-   };
+   QEI& _device;
+};
+}
 }
