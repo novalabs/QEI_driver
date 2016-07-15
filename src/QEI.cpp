@@ -76,9 +76,10 @@ QEI_Delta::get(
 )
 {
    data.value = _device._qei.getDelta() / (float)configuration().ticks * (2.0f * core::utils::math::constants::pi<float>());
-      if ((uint8_t)configuration.invert) {
-         data.value = -data.value;
-      }
+
+   if ((uint8_t)configuration().invert) {
+      data.value = -data.value;
+   }
 }       // QEI::update
 
 bool
