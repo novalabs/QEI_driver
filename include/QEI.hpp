@@ -9,7 +9,7 @@
 #include <ModuleConfiguration.hpp>
 
 #include <core/hw/QEI.hpp>
-#include <core/mw/CoreSensor.hpp>
+#include <core/utils/BasicSensor.hpp>
 #include <core/QEI_driver/QEI_DeltaConfiguration.hpp>
 
 namespace core {
@@ -34,7 +34,7 @@ public:
 };
 
 class QEI_Delta:
-   public core::mw::CoreSensor<ModuleConfiguration::QEI_DELTA_DATATYPE>,
+   public core::utils::BasicSensor<ModuleConfiguration::QEI_DELTA_DATATYPE>,
    public core::mw::CoreConfigurable<core::QEI_driver::QEI_DeltaConfiguration>
 {
 public:
