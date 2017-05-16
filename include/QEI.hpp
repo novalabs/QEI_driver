@@ -17,66 +17,66 @@ namespace QEI_driver {
 class QEI
 {
 public:
-   QEI(
-      core::hw::QEI& qei
-   );
+    QEI(
+        core::hw::QEI& qei
+    );
 
-   virtual
-   ~QEI();
-
-public:
-   bool
-   probe();
-
+    virtual
+    ~QEI();
 
 public:
-   core::hw::QEI& _qei;
+    bool
+    probe();
+
+
+public:
+    core::hw::QEI& _qei;
 };
 
 class QEI_Delta:
-   public core::utils::BasicSensor<ModuleConfiguration::QEI_DELTA_DATATYPE>,
-   public core::mw::CoreConfigurable<core::QEI_driver::QEI_DeltaConfiguration>
+    public core::utils::BasicSensor<ModuleConfiguration::QEI_DELTA_DATATYPE>,
+    public core::mw::CoreConfigurable<core::QEI_driver::QEI_DeltaConfiguration>
 {
 public:
-   QEI_Delta(
-      const char* name,
-      QEI&        device
-   );
+    QEI_Delta(
+        const char* name,
+        QEI&        device
+    );
 
-   virtual
-   ~QEI_Delta();
+    virtual
+    ~QEI_Delta();
 
 private:
 public:
-   bool
-   init();
+    bool
+    init();
 
-   bool
-   configure();
+    bool
+    configure();
 
-   bool
-   start();
+    bool
+    start();
 
-   bool
-   stop();
+    bool
+    stop();
 
-   bool
-   waitUntilReady();
+    bool
+    waitUntilReady();
 
-   bool
-   update();
+    bool
+    update();
 
-   void
-   get(
-      DataType& data
-   );
+    void
+    get(
+        DataType& data
+    );
 
 
 protected:
-   core::os::Time _timestamp;
+    core::os::Time _timestamp;
 
 private:
-   QEI& _device;
+    QEI& _device;
 };
 }
 }
