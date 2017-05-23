@@ -22,7 +22,7 @@ bool
 QEI::probe()
 {
     return true;
-}       // QEI::init
+}
 
 QEI_Delta::QEI_Delta(
     const char* name,
@@ -39,12 +39,12 @@ bool
 QEI_Delta::init()
 {
     return true;
-}       // QEI::init
+}
 
 bool
 QEI_Delta::configure()
 {
-    return true;
+    return isConfigured();
 }
 
 bool
@@ -80,7 +80,7 @@ QEI_Delta::get(
     if ((uint8_t)configuration().invert) {
         data.value = -data.value;
     }
-}       // QEI::update
+}
 
 bool
 QEI_Delta::waitUntilReady()
