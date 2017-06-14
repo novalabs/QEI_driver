@@ -1,6 +1,6 @@
 {
-  "name": "QEI_AngularSpeed",
-  "description": "Angular Speed for QEI device",
+  "name": "QEI_PositionConfiguration",
+  "description": "Position for QEI device",
   "namespace": "@",
   "fields": [
     {

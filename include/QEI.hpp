@@ -6,11 +6,12 @@
 
 #pragma once
 
-#include <ModuleConfiguration.hpp>
-
 #include <core/hw/QEI.hpp>
 #include <core/utils/BasicSensor.hpp>
+#include <core/common_msgs/Float32.hpp>
 #include <core/QEI_driver/QEI_DeltaConfiguration.hpp>
+#include <core/QEI_driver/QEI_PositionConfiguration.hpp>
+
 
 namespace core {
 namespace QEI_driver {
@@ -34,7 +35,7 @@ public:
 };
 
 class QEI_Delta:
-    public core::utils::BasicSensor<ModuleConfiguration::QEI_DELTA_DATATYPE>,
+    public core::utils::BasicSensor<core::common_msgs::Float32>,
     public core::mw::CoreConfigurable<core::QEI_driver::QEI_DeltaConfiguration>
 {
 public:
@@ -77,6 +78,66 @@ protected:
 
 private:
     QEI& _device;
+};
+
+class QEI_Position:
+    public core::utils::BasicSensor<float>,
+    public core::mw::CoreConfigurable<core::QEI_driver::QEI_PositionConfiguration>
+{
+public:
+    QEI_Position(
+        const char* name,
+        QEI&        device
+    );
+
+    virtual
+    ~QEI_Position();
+
+public:
+    bool
+    init();
+
+    bool
+    configure();
+
+    bool
+    start();
+
+    bool
+    stop();
+
+    bool
+    waitUntilReady();
+
+    bool
+    update();
+
+    void
+    get(
+        DataType& data
+    );
+
+
+protected:
+    core::os::Time _timestamp;
+
+private:
+    QEI& _device;
+
+public:
+    struct Converter {
+        using FROM = float;
+        using TO   = core::common_msgs::Float32;
+
+        static inline void
+        _(
+            const FROM& from,
+            TO*         to
+        )
+        {
+            to->value = from;
+        }
+    };
 };
 }
 }

@@ -98,5 +98,71 @@ QEI_Delta::waitUntilReady()
 
     return true;
 }
+
+QEI_Position::QEI_Position(
+    const char* name,
+    QEI&        device
+) : CoreConfigurable<QEI_PositionConfiguration>::CoreConfigurable(name),
+    _timestamp(core::os::Time::IMMEDIATE),
+    _device(device)
+{}
+
+QEI_Position::~QEI_Position()
+{}
+
+bool
+QEI_Position::init()
+{
+    return true;
+}
+
+bool
+QEI_Position::configure()
+{
+    return isConfigured();
+}
+
+bool
+QEI_Position::start()
+{
+    CORE_ASSERT(isConfigured());
+
+    _device._qei.enable();
+    _timestamp = core::os::Time::IMMEDIATE;
+    return true;
+}
+
+bool
+QEI_Position::stop()
+{
+    _device._qei.disable();
+    return true;
+}
+
+bool
+QEI_Position::update()
+{
+    return true;
+}
+
+void
+QEI_Position::get(
+    DataType& data
+)
+{
+    data = (_device._qei.getCount() / (float)configuration().ticks) * (2.0f * core::utils::math::constants::pi<float>());
+
+    if ((uint8_t)configuration().invert) {
+        data = -data;
+    }
+}
+
+bool
+QEI_Position::waitUntilReady()
+{
+    core::os::Thread::sleep(core::os::Time::ms((uint16_t)configuration().period));
+
+    return true;
+}
 }
 }
