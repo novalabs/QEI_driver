@@ -113,6 +113,11 @@ public:
     update();
 
     void
+    reset() {
+        // Not implemented
+    };
+    
+    void
     get(
         DataType& data
     );
