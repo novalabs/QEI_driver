@@ -35,7 +35,7 @@ public:
 };
 
 class QEI_Delta:
-    public core::utils::BasicSensor<core::common_msgs::Float32>,
+    public core::utils::BasicSensor<float>,
     public core::mw::CoreConfigurable<core::QEI_driver::QEI_DeltaConfiguration>
 {
 public:
@@ -47,7 +47,6 @@ public:
     virtual
     ~QEI_Delta();
 
-private:
 public:
     bool
     init();
@@ -68,16 +67,35 @@ public:
     update();
 
     void
+    reset() {
+        // Not implemented
+    };
+
+    void
     get(
         DataType& data
     );
 
-
-protected:
-    core::os::Time _timestamp;
-
 private:
+    core::os::Time _deadline;
+    float _data;
+
     QEI& _device;
+
+public:
+    struct Converter {
+        using FROM = float;
+        using TO   = core::common_msgs::Float32;
+
+        static inline void
+        _(
+            const FROM& from,
+            TO*         to
+        )
+        {
+            to->value = from;
+        }
+    };
 };
 
 class QEI_Position:

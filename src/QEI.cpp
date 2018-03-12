@@ -28,7 +28,8 @@ QEI_Delta::QEI_Delta(
     const char* name,
     QEI&        device
 ) : CoreConfigurable<QEI_DeltaConfiguration>::CoreConfigurable(name),
-    _timestamp(core::os::Time::IMMEDIATE),
+    _deadline(core::os::Time::IMMEDIATE),
+	_data(0.0f),
     _device(device)
 {}
 
@@ -53,7 +54,7 @@ QEI_Delta::start()
     CORE_ASSERT(isConfigured());
 
     _device._qei.enable();
-    _timestamp = core::os::Time::IMMEDIATE;
+    _deadline = core::os::Time::IMMEDIATE;
     return true;
 }
 
@@ -67,34 +68,27 @@ QEI_Delta::stop()
 bool
 QEI_Delta::update()
 {
+	_data = (_device._qei.getDelta() / (float)configuration().ticks) * (1000.0f / configuration().period) * (2.0f * core::utils::math::constants::pi<float>());
+
+    if ((uint8_t)configuration().invert) {
+        _data = -_data;
+    }
+
     return true;
-}       // QEI_Delta::update
+}
 
 void
 QEI_Delta::get(
     DataType& data
 )
 {
-    data.value = (_device._qei.getDelta() / (float)configuration().ticks) * (1000.0 / configuration().period) * (2.0f * core::utils::math::constants::pi<float>());
-
-    if ((uint8_t)configuration().invert) {
-        data.value = -data.value;
-    }
+    data = _data;
 }
 
 bool
 QEI_Delta::waitUntilReady()
 {
-    // FIXME !!!!!
-    /*
-       if (_timestamp != core::os::Time::IMMEDIATE) {
-       core::os::Thread::sleep_until(_timestamp + core::os::Time::ms(configuration.period));
-       }
-
-       _timestamp = core::os::Time::now();
-     */
-
-    chThdSleepMilliseconds((uint16_t)configuration().period);
+    _deadline = core::os::Thread::sleep_until(_deadline, _deadline + core::os::Time::ms((uint16_t)configuration().period));
 
     return true;
 }
