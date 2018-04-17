@@ -7,6 +7,7 @@
 #pragma once
 
 #include <core/hw/QEI.hpp>
+#include <core/os/Time.hpp>
 #include <core/utils/BasicSensor.hpp>
 #include <core/common_msgs/Float32.hpp>
 #include <core/QEI_driver/QEI_DeltaConfiguration.hpp>
